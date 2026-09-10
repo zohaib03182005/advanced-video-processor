@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: advanced-video-processor
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: REDIS_HOST
+        fromService:
+          type: keyvalue
+          name: video-queue
+          property: host
+      - key: WHISPER_MODEL
+        value: base
+      - key: LUT_FILE
+        value: /app/assets/quality.cube
+  - type: keyvalue
+    name: video-queue
+    plan: free
+    ipAllowList: []
